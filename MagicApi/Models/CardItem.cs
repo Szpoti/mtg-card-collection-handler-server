@@ -12,28 +12,29 @@ public class CardItem
     public CardItem(CardModel cardModel)
     {
         Id = cardModel.id;
+        OracleId = cardModel.oracle_id;
         Name = cardModel.name;
         Rarity = cardModel.rarity;
         Set = cardModel.set;
         SetName = cardModel.setName;
         Type = cardModel.type_line;
-        Prices = priceFilter(cardModel.prices);
+        Price = priceFilter(cardModel.prices);
         Text = cardModel.oracle_text;
         ImageUri = cardModel.image_uris.border_crop;
     }
 
     public System.Guid Id { get; }
+    public System.Guid OracleId { get; }
     public string Name { get; set; }
     public string Rarity { get; }
     public string Set { get; }
     public string SetName { get; }
     public string Type { get; }
-    public string Prices { get; }
+    public string Price { get; }
     public string Text { get; }
     public string ImageUri { get; }
     public bool IsAvailable { get; set; }
     public string Secret { get; }
-
 
     private string priceFilter(Prices prices)
     {

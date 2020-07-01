@@ -1,6 +1,7 @@
 // Root myDeserializedClass = JsonConvert.DeserializeObject(myJsonResponse); 
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using System;
 
 namespace Services.Models
 {
@@ -61,8 +62,8 @@ namespace Services.Models
 
     public class CardModel
     {
-        public System.Guid id { get; set; }
-        public string oracle_id { get; set; }
+        public Guid id { get; set; }
+        public Guid oracle_id { get; set; }
         public List<int> multiverse_ids { get; set; }
         public int mtgo_id { get; set; }
         public int mtgo_foil_id { get; set; }
