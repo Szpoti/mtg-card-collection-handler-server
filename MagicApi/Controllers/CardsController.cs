@@ -1,35 +1,52 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MagicApi.Models;
+using System.Net.Http;
+using Services.Models;
+using Microsoft.AspNetCore.Cors;
 
 namespace MagicApi.Controllers
 {
-    [Route("api/TodoItems")]
+    [Route("api/Cards")]
     [ApiController]
-    public class CardItemsController : ControllerBase
+    public class CardsController : ControllerBase
     {
         private readonly CardContext _context;
 
-        public CardItemsController(CardContext context)
+        public CardsController(CardContext context)
         {
             _context = context;
         }
 
         // GET: api/CardItems
+        [EnableCors("MainPolicy")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CardItemDTO>>> GetCardItems()
+        public async Task<ActionResult<IEnumerable<CardItem>>> GetCardItems()
         {
-            return await _context.CardItems.Select(x => ItemToDTO(x)).ToListAsync();
+            int CARDSNUMBER = 30;
+            List<CardItem> cards = new List<CardItem>();
+            List<Task> requestSenders = new List<Task>();
+            HttpClient client = new HttpClient();
+            for (int i = 0; i < CARDSNUMBER; i++)
+            {
+                requestSenders.Add(Task.Run(async () =>
+               {
+                   string card = await client.GetStringAsync("https://api.scryfall.com/cards/random");
+                   CardModel cardModel = Newtonsoft.Json.JsonConvert.DeserializeObject<CardModel>(card);
+                   CardItem cardItem = new CardItem(cardModel);
+                   cards.Add(cardItem);
+               }));
+            }
+            await Task.WhenAll(requestSenders.ToArray());
+            return cards;
         }
 
-        // GET: api/CardItems/5
+        // GET: api/CardItems/4386cb3c-45ac-481c-aa68-04e6efc0442e
         [HttpGet("{id}")]
-        public async Task<ActionResult<CardItemDTO>> GetCardItem(long id)
+        public async Task<ActionResult<CardItemDTO>> GetCardItem(System.Guid id)
         {
             var cardItem = await _context.CardItems.FindAsync(id);
 
@@ -45,7 +62,7 @@ namespace MagicApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCardItem(long id, CardItemDTO cardItemDTO)
+        public async Task<IActionResult> PutCardItem(System.Guid id, CardItemDTO cardItemDTO)
         {
             if (id != cardItemDTO.Id)
             {
@@ -108,7 +125,7 @@ namespace MagicApi.Controllers
             return NoContent();
         }
 
-        private bool CardItemExists(long id)
+        private bool CardItemExists(System.Guid id)
         {
             return _context.CardItems.Any(e => e.Id == id);
         }

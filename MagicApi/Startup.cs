@@ -23,6 +23,16 @@ namespace MagicApi
             services.AddDbContext<CardContext>(opt =>
             opt.UseInMemoryDatabase("CardList"));
             services.AddControllers();
+            services.AddCors(options =>
+        {
+            options.AddPolicy("MainPolicy",
+                builder =>
+                {
+                    builder.WithOrigins("http://localhost:3000")
+                                        .AllowAnyHeader()
+                                        .AllowAnyMethod();
+                });
+        });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -36,6 +46,8 @@ namespace MagicApi
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthorization();
 
