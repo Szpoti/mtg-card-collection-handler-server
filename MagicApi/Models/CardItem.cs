@@ -19,7 +19,7 @@ public class CardItem
         Price = priceFilter(cardModel.prices);
         Text = cardModel.oracle_text;
         ColorIdentity = cardModel.color_identity;
-        ImageUri = cardModel.image_uris.border_crop;
+        ImageUri = cardModel.image_uris?.border_crop;
     }
 
     public System.Guid Id { get; }
