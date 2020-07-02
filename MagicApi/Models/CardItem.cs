@@ -1,14 +1,12 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using Services.Models;
 
 public class CardItem
 {
-
     public CardItem()
     {
-
     }
+
     public CardItem(CardModel cardModel)
     {
         Id = cardModel.id;
@@ -20,6 +18,7 @@ public class CardItem
         Type = cardModel.type_line;
         Price = priceFilter(cardModel.prices);
         Text = cardModel.oracle_text;
+        ColorIdentity = cardModel.color_identity;
         ImageUri = cardModel.image_uris.border_crop;
     }
 
@@ -32,6 +31,7 @@ public class CardItem
     public string Type { get; }
     public string Price { get; }
     public string Text { get; }
+    public List<string> ColorIdentity { get; }
     public string ImageUri { get; }
     public bool IsAvailable { get; set; }
     public string Secret { get; }
