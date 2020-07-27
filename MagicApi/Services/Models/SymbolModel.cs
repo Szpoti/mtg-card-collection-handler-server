@@ -18,5 +18,4 @@ namespace Services.Models
         public object gatherer_alternates { get; set; }
 
     }
-
 }
