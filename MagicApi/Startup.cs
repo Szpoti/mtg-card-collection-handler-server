@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using MagicApi.Models;
+using MagicApi.Data;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 namespace MagicApi
 {
@@ -23,6 +25,8 @@ namespace MagicApi
             services.AddDbContext<CardContext>(opt =>
             opt.UseInMemoryDatabase("CardList"));
             services.AddControllers();
+            services.AddDbContext<MTGContext>(opt =>
+            opt.UseNpgsql("Host=localhost;Database=MTGDatabase;Username=postgres;Password=mksm20"));
             services.AddCors(options =>
         {
             options.AddPolicy("MainPolicy",
