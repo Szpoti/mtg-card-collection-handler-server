@@ -6,7 +6,6 @@ namespace MagicApi.Models
     {
         public int Id { get; set; }
         public string APIKey { get; set; }
-        [Required]
         public string Username { get; set; }
         [Required]
         public string Password { get; set; }
