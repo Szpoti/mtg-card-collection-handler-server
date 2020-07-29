@@ -71,6 +71,7 @@ namespace MagicApi.Controllers
             catch (Exception ex)
             {
                 // return error message if there was an exception
+                System.Console.WriteLine(ex.Message);
                 return null;
             }
         }
