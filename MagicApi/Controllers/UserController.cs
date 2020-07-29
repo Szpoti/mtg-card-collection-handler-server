@@ -62,7 +62,7 @@ namespace MagicApi.Controllers
             System.Console.WriteLine(model.Password);
             try
             {
-                var user = _context.Users.Where(u => u.Email == model.Email).ToArray()[0];
+                var user = _context.Users.Where(u => u.Email == model.Email).FirstOrDefault();
                 System.Console.WriteLine(user.Email);
                 System.Console.WriteLine(user.Password);
                 if (CheckPassword(model.Password, user.Password))
