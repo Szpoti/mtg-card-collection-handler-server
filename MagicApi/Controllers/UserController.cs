@@ -58,26 +58,19 @@ namespace MagicApi.Controllers
         [HttpPost("login")]
         public User Login([FromBody] User model)
         {
-            System.Console.WriteLine(model.Email);
-            System.Console.WriteLine(model.Password);
             try
             {
                 var user = _context.Users.Where(u => u.Email == model.Email).FirstOrDefault();
-                System.Console.WriteLine(user.Email);
-                System.Console.WriteLine(user.Password);
                 if (CheckPassword(model.Password, user.Password))
                 {
-                    System.Console.WriteLine("Found");
                     user.Password = string.Empty;
                     return user;
                 }
-                System.Console.WriteLine("Not found");
                 return null;
             }
             catch (Exception ex)
             {
                 // return error message if there was an exception
-                System.Console.WriteLine(ex.Message);
                 return null;
             }
         }
