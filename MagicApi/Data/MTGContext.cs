@@ -17,6 +17,9 @@ namespace MagicApi.Data
             modelBuilder.Entity<User>()
                 .HasKey(c => c.Id)
                 .HasName("UserId");
+            modelBuilder.Entity<User>()
+                .Property(e => e.Id)
+                .ValueGeneratedOnAdd();
         }
 
 
