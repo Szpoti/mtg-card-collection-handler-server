@@ -12,6 +12,9 @@ using MagicApi.Services;
 using MagicApi.Data;
 using BCrypt.Net;
 using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace MagicApi.Controllers
 {
@@ -50,9 +53,37 @@ namespace MagicApi.Controllers
             }
         }
 
+        [AllowAnonymous]
+        [EnableCors("MainPolicy")]
+        [HttpPost("login")]
+        public User Login([FromBody] User model)
+        {
+            try
+            {
+                var user = _context.Users.Where(u => u.Email == model.Email).FirstOrDefault();
+                if (CheckPassword(model.Password, user.Password))
+                {
+                    user.Password = string.Empty;
+                    return user;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                // return error message if there was an exception
+                System.Console.WriteLine(ex.Message);
+                return null;
+            }
+        }
+
         private string HashPassword(string password)
         {
             return BCrypt.Net.BCrypt.HashPassword(password, _configuration.GetSection("BCrypt").GetSection("salt").Value);
+        }
+
+        private bool CheckPassword(string password, string hashedPassword)
+        {
+            return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
         }
     }
 }
