@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Cors;
 using MagicApi.Models;
 using MagicApi.Services;
 using MagicApi.Data;
+using BCrypt.Net;
+using Microsoft.Extensions.Configuration;
 
 namespace MagicApi.Controllers
 {
@@ -19,9 +21,12 @@ namespace MagicApi.Controllers
     {
         private readonly MTGContext _context;
 
-        public UserController(MTGContext context)
+        private readonly IConfiguration _configuration;
+
+        public UserController(MTGContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         [AllowAnonymous]
@@ -29,23 +34,25 @@ namespace MagicApi.Controllers
         [HttpPost("register")]
         public IActionResult Register([FromBody] User model)
         {
-            System.Console.WriteLine(model.Username);
-            System.Console.WriteLine(model.Email);
-            System.Console.WriteLine(model.Password);
 
             try
             {
                 // create user
+                model.Password = HashPassword(model.Password);
                 _context.Add(model);
                 _context.SaveChanges();
                 return Ok();
             }
             catch (Exception ex)
             {
-                System.Console.WriteLine(model.Username);
                 // return error message if there was an exception
                 return BadRequest(new { message = ex.Message });
             }
+        }
+
+        private string HashPassword(string password)
+        {
+            return BCrypt.Net.BCrypt.HashPassword(password, _configuration.GetSection("BCrypt").GetSection("salt").Value);
         }
     }
 }
