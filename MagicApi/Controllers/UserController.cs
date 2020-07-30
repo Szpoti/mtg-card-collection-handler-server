@@ -37,7 +37,6 @@ namespace MagicApi.Controllers
         [HttpPost("register")]
         public IActionResult Register([FromBody] User model)
         {
-
             try
             {
                 // create user
