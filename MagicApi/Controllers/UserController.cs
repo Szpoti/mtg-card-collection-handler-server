@@ -92,6 +92,24 @@ namespace MagicApi.Controllers
                 .FirstOrDefault();
         }
 
+        [AllowAnonymous]
+        [EnableCors("MainPolicy")]
+        [HttpPost("logout")]
+        public IActionResult LogOut(string jwt)
+        {
+            User user =_context.Users
+                .Where(user => user.JWT == jwt)
+                .FirstOrDefault();
+            if (user == null)
+            {
+                return Ok();
+            }
+
+            user.JWT = "";
+            _context.SaveChanges();
+            return Ok();
+        }
+
         private string HashPassword(string password)
         {
             return BCrypt.Net.BCrypt.HashPassword(password, _configuration.GetSection("BCrypt").GetSection("salt").Value);
