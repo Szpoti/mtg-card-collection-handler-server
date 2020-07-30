@@ -26,10 +26,13 @@ namespace MagicApi.Controllers
 
         private readonly IConfiguration _configuration;
 
+        private readonly JwtService _authService;
+
         public UserController(MTGContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;
+            _authService = new JwtService(_configuration);
         }
 
         [AllowAnonymous]
@@ -63,6 +66,7 @@ namespace MagicApi.Controllers
                 if (CheckPassword(model.Password, user.Password))
                 {
                     user.Password = string.Empty;
+                    user.JWT = _authService.GenerateSecurityToken(user);
                     return user;
                 }
                 return null;

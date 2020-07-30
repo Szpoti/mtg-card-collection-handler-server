@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using MagicApi.Models;
 using MagicApi.Data;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
+using MagicApi.Middlewares;
 
 namespace MagicApi
 {
@@ -42,6 +43,7 @@ namespace MagicApi
                                         .AllowAnyOrigin();
                 });
         });
+            services.AddTokenAuthentication(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,6 +59,8 @@ namespace MagicApi
             app.UseRouting();
 
             app.UseCors();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
