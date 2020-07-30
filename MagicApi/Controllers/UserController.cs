@@ -38,20 +38,21 @@ namespace MagicApi.Controllers
         [AllowAnonymous]
         [EnableCors("MainPolicy")]
         [HttpPost("register")]
-        public IActionResult Register([FromBody] User model)
+        public User Register([FromBody] User model)
         {
             try
             {
                 // create user
                 model.Password = HashPassword(model.Password);
+                model.JWT = _authService.GenerateSecurityToken(model);
                 _context.Add(model);
                 _context.SaveChanges();
-                return Ok();
+                model.Password = null;
+                return model;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                // return error message if there was an exception
-                return BadRequest(new { message = ex.Message });
+                return null;
             }
         }
 
