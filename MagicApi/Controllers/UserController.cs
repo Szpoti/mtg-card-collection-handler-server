@@ -26,29 +26,33 @@ namespace MagicApi.Controllers
 
         private readonly IConfiguration _configuration;
 
+        private readonly JwtService _authService;
+
         public UserController(MTGContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;
+            _authService = new JwtService(_configuration);
         }
 
         [AllowAnonymous]
         [EnableCors("MainPolicy")]
         [HttpPost("register")]
-        public IActionResult Register([FromBody] User model)
+        public User Register([FromBody] User model)
         {
             try
             {
                 // create user
                 model.Password = HashPassword(model.Password);
+                model.JWT = _authService.GenerateSecurityToken(model);
                 _context.Add(model);
                 _context.SaveChanges();
-                return Ok();
+                model.Password = null;
+                return model;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                // return error message if there was an exception
-                return BadRequest(new { message = ex.Message });
+                return null;
             }
         }
 
@@ -62,6 +66,8 @@ namespace MagicApi.Controllers
                 var user = _context.Users.Where(u => u.Email == model.Email).FirstOrDefault();
                 if (CheckPassword(model.Password, user.Password))
                 {
+                    user.JWT = _authService.GenerateSecurityToken(user);
+                    _context.SaveChanges();
                     user.Password = string.Empty;
                     return user;
                 }
@@ -73,6 +79,35 @@ namespace MagicApi.Controllers
                 System.Console.WriteLine(ex.Message);
                 return null;
             }
+        }
+
+        [Authorize]
+        [EnableCors("MainPolicy")]
+        [HttpGet("login")]
+        public User GetUser(string jwt)
+        {
+            return _context.Users
+                .Where(user => user.JWT == jwt)
+                .Select(u => new User() { Username = u.Username })
+                .FirstOrDefault();
+        }
+
+        [AllowAnonymous]
+        [EnableCors("MainPolicy")]
+        [HttpPost("logout")]
+        public IActionResult LogOut(string jwt)
+        {
+            User user =_context.Users
+                .Where(user => user.JWT == jwt)
+                .FirstOrDefault();
+            if (user == null)
+            {
+                return Ok();
+            }
+
+            user.JWT = "";
+            _context.SaveChanges();
+            return Ok();
         }
 
         private string HashPassword(string password)
