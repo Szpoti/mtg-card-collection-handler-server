@@ -6,5 +6,5 @@ https://github.com/Szpoti/mtg-card-collection-handler-ui
 
 The usage is simple: 
 Go directly into the main folder, then enter the folder 'MagicAPI' and run
-# `dotnet start`
+### `dotnet start`
 After you ran the ui itself too, you will be able to use the webpage.
