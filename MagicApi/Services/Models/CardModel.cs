@@ -1,4 +1,4 @@
-// Root myDeserializedClass = JsonConvert.DeserializeObject(myJsonResponse); 
+// Root myDeserializedClass = JsonConvert.DeserializeObject(myJsonResponse);
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System;
@@ -36,10 +36,10 @@ namespace Services.Models
 
     public class Prices
     {
-        public string usd { get; set; }
-        public object usd_foil { get; set; }
-        public string eur { get; set; }
-        public string tix { get; set; }
+        public double? usd { get; set; }
+        public double? usd_foil { get; set; }
+        public double? eur { get; set; }
+        public double? tix { get; set; }
 
     }
 
