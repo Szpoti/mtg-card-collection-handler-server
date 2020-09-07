@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
 using Services.Models;
 using Microsoft.AspNetCore.Cors;
+using Newtonsoft.Json;
 
 namespace MagicApi.Controllers
 {
@@ -12,6 +13,21 @@ namespace MagicApi.Controllers
     [ApiController]
     public class CardController : ControllerBase
     {
+
+        [EnableCors("MainPolicy")]
+        [HttpGet("{name}")]
+        public async Task<CardItem> getCardByName(string name)
+        {
+            HttpClient client = new HttpClient();
+            string escapedCardName = System.Uri.EscapeDataString(name);
+            System.Console.WriteLine(name);
+            System.Console.WriteLine(escapedCardName);
+            string json = await client.GetStringAsync($"https://api.scryfall.com/cards/named?exact={escapedCardName}");
+            CardModel cardModel = Newtonsoft.Json.JsonConvert.DeserializeObject<CardModel>(json);
+            CardItem card = new CardItem(cardModel);
+            return card;
+        }
+
         [EnableCors("MainPolicy")]
         [HttpGet("{id}/prints")]
         public async Task<ActionResult<IEnumerable<CardItem>>> GetPrints(Guid id)
