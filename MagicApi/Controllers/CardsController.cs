@@ -130,7 +130,7 @@ namespace MagicApi.Controllers
             return _context.CardItems.Any(e => e.Id == id);
         }
 
-        private static CardItemDTO ItemToDTO(CardItem todoItem) =>
+        public static CardItemDTO ItemToDTO(CardItem todoItem) =>
         new CardItemDTO
         {
             Id = todoItem.Id,
