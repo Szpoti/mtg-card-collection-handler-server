@@ -8,6 +8,7 @@ using MagicApi.Models;
 using MagicApi.Data;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
 using MagicApi.Middlewares;
+using System.Net.Http;
 
 namespace MagicApi
 {
@@ -44,6 +45,7 @@ namespace MagicApi
                 });
         });
             services.AddTokenAuthentication(Configuration);
+            services.AddSingleton(new HttpClient());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
