@@ -15,13 +15,22 @@ namespace MagicApi.Controllers
     {
 
         [EnableCors("MainPolicy")]
-        [HttpGet("{name}")]
+        [HttpGet("byid/{id}")]
+        public async Task<CardItem> getCardById(string id)
+        {
+            HttpClient client = new HttpClient();
+            string json = await client.GetStringAsync($"https://api.scryfall.com/cards/{id}");
+            CardModel cardModel = Newtonsoft.Json.JsonConvert.DeserializeObject<CardModel>(json);
+            CardItem card = new CardItem(cardModel);
+            return card;
+        }
+
+        [EnableCors("MainPolicy")]
+        [HttpGet("byname/{name}")]
         public async Task<CardItem> getCardByName(string name)
         {
             HttpClient client = new HttpClient();
             string escapedCardName = System.Uri.EscapeDataString(name);
-            System.Console.WriteLine(name);
-            System.Console.WriteLine(escapedCardName);
             string json = await client.GetStringAsync($"https://api.scryfall.com/cards/named?exact={escapedCardName}");
             CardModel cardModel = Newtonsoft.Json.JsonConvert.DeserializeObject<CardModel>(json);
             CardItem card = new CardItem(cardModel);
