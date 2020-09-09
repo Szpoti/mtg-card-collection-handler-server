@@ -21,12 +21,12 @@ namespace MagicApi.Controllers
             _context = context;
         }
 
-        // GET: api/CardItems
+        // GET: api/Cards
         [EnableCors("MainPolicy")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CardItem>>> GetCardItems()
         {
-            int CARDSNUMBER = 30;
+            int CARDSNUMBER = 32;
             List<CardItem> cards = new List<CardItem>();
             List<Task> requestSenders = new List<Task>();
             HttpClient client = new HttpClient();
