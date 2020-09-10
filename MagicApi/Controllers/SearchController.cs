@@ -88,13 +88,21 @@ namespace MagicApi.Controllers
         private async Task<SearchContainer> SendApiRequest(string url, int page, List<CardItem> results)
         {
             url = url + (page);
-            string searchResponse = await _httpClient.GetStringAsync(url);
-            SearchContainer searchContainer = JsonConvert.DeserializeObject<SearchContainer>(searchResponse);
-            foreach (CardModel item in searchContainer.Data)
+            try
             {
-                results.Add(new CardItem(item));
+                string searchResponse = await _httpClient.GetStringAsync(url);
+                SearchContainer searchContainer = JsonConvert.DeserializeObject<SearchContainer>(searchResponse);
+                foreach (CardModel item in searchContainer.Data)
+                {
+                    results.Add(new CardItem(item));
+                }
+                return searchContainer;
             }
-            return searchContainer;
+            catch (System.Net.Http.HttpRequestException e)
+            {
+                System.Console.WriteLine(e);
+                return new SearchContainer() { TotalCards = 0, Data = new List<CardModel>() };
+            }
         }
     }
 }
