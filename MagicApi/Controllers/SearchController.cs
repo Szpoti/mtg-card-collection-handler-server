@@ -49,7 +49,7 @@ namespace MagicApi.Controllers
                 }
             }
 
-            if (query.Colors.Length != 0)
+            if (query.Colors != null && query.Colors.Length != 0)
             {
                 urlParam.AppendFormat("c:{0} ", string.Concat(query.Colors));
             }
