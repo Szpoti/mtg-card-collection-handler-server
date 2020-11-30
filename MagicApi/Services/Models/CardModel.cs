@@ -33,6 +33,17 @@ namespace Services.Models
         public string oldschool { get; set; }
 
     }
+    public class CardFace
+    {
+        public string name { get; set; }
+        public string mana_cost { get; set; }
+        public string type_line { get; set; }
+        public string oracle_text { get; set; }
+        public string watermark { get; set; }
+        public string artist { get; set; }
+        public string artist_id { get; set; }
+        public string illustration_id { get; set; }
+    }
 
     public class Prices
     {
@@ -74,6 +85,7 @@ namespace Services.Models
         public string uri { get; set; }
         public string scryfall_uri { get; set; }
         public string layout { get; set; }
+        public IList<CardFace> card_faces { get; set; }
         public bool highres_image { get; set; }
         public ImageUris image_uris { get; set; }
         public string mana_cost { get; set; }

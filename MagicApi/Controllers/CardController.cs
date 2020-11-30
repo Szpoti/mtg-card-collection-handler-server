@@ -13,6 +13,27 @@ namespace MagicApi.Controllers
     [ApiController]
     public class CardController : ControllerBase
     {
+        [EnableCors("MainPolicy")]
+        [HttpGet("homepage")]
+        public async Task<ActionResult<IEnumerable<CardItem>>> GetCardItems()
+        {
+            int CARDSNUMBER = 32;
+            List<CardItem> cards = new List<CardItem>();
+            List<Task> requestSenders = new List<Task>();
+            HttpClient client = new HttpClient();
+            for (int i = 0; i < CARDSNUMBER; i++)
+            {
+                requestSenders.Add(Task.Run(async () =>
+               {
+                   string card = await client.GetStringAsync("https://api.scryfall.com/cards/random");
+                   CardModel cardModel = Newtonsoft.Json.JsonConvert.DeserializeObject<CardModel>(card);
+                   CardItem cardItem = new CardItem(cardModel);
+                   cards.Add(cardItem);
+               }));
+            }
+            await Task.WhenAll(requestSenders.ToArray());
+            return cards;
+        }
 
         [EnableCors("MainPolicy")]
         [HttpGet("byid/{id}")]
@@ -20,18 +41,6 @@ namespace MagicApi.Controllers
         {
             HttpClient client = new HttpClient();
             string json = await client.GetStringAsync($"https://api.scryfall.com/cards/{id}");
-            CardModel cardModel = Newtonsoft.Json.JsonConvert.DeserializeObject<CardModel>(json);
-            CardItem card = new CardItem(cardModel);
-            return card;
-        }
-
-        [EnableCors("MainPolicy")]
-        [HttpGet("byname/{name}")]
-        public async Task<CardItem> getCardByName(string name)
-        {
-            HttpClient client = new HttpClient();
-            string escapedCardName = System.Uri.EscapeDataString(name);
-            string json = await client.GetStringAsync($"https://api.scryfall.com/cards/named?exact={escapedCardName}");
             CardModel cardModel = Newtonsoft.Json.JsonConvert.DeserializeObject<CardModel>(json);
             CardItem card = new CardItem(cardModel);
             return card;
@@ -52,6 +61,5 @@ namespace MagicApi.Controllers
             }
             return cards;
         }
-
     }
 }

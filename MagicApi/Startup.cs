@@ -24,11 +24,9 @@ namespace MagicApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<CardContext>(opt =>
-            opt.UseInMemoryDatabase("CardList"));
             services.AddControllers();
             services.AddDbContext<MTGContext>(opt =>
-            opt.UseNpgsql("Host=localhost;Database=MTGDatabase;Username=postgres;Password=mksm20"));
+            opt.UseNpgsql(this.Configuration.GetConnectionString("key")));
             services.AddCors(options =>
         {
             options.AddPolicy("MainPolicy",

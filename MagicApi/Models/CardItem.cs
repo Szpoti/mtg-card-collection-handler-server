@@ -20,6 +20,19 @@ public class CardItem
         Text = cardModel.oracle_text;
         ColorIdentity = cardModel.color_identity;
         ImageUri = cardModel.image_uris?.border_crop;
+        Layout = cardModel.layout;
+        if (cardModel.card_faces != null)
+        {
+            CardFaces = new string[] { cardModel.card_faces[0].oracle_text, cardModel.card_faces[1].oracle_text };
+        }
+        else
+        {
+            CardFaces = new string[] { "fa", "sz" };
+        }
+        foreach (var item in CardFaces)
+        {
+            System.Console.WriteLine(item);
+        }
     }
 
     public System.Guid Id { get; }
@@ -35,7 +48,8 @@ public class CardItem
     public string ImageUri { get; }
     public bool IsAvailable { get; set; }
     public string Secret { get; }
-
+    public string Layout { get; set; }
+    public string[] CardFaces { get; set; }
     private string priceFilter(Prices prices)
     {
         if (prices.usd != null)
