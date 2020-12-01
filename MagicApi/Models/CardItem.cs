@@ -27,11 +27,7 @@ public class CardItem
         }
         else
         {
-            CardFaces = new string[] { "fa", "sz" };
-        }
-        foreach (var item in CardFaces)
-        {
-            System.Console.WriteLine(item);
+            CardFaces = null;
         }
     }
 
