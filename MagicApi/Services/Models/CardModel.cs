@@ -43,6 +43,7 @@ namespace Services.Models
         public string artist { get; set; }
         public string artist_id { get; set; }
         public string illustration_id { get; set; }
+        public ImageUris image_uris { get; set; }
     }
 
     public class Prices

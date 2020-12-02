@@ -24,10 +24,12 @@ public class CardItem
         if (cardModel.card_faces != null)
         {
             CardFaces = new string[] { cardModel.card_faces[0].oracle_text, cardModel.card_faces[1].oracle_text };
+            CardImages = new string[] { cardModel.card_faces[0].image_uris.border_crop, cardModel.card_faces[1].image_uris.border_crop };
         }
         else
         {
             CardFaces = null;
+            CardImages = null;
         }
     }
 
@@ -46,6 +48,7 @@ public class CardItem
     public string Secret { get; }
     public string Layout { get; set; }
     public string[] CardFaces { get; set; }
+    public string[] CardImages { get; set; }
     private string priceFilter(Prices prices)
     {
         if (prices.usd != null)
