@@ -13,7 +13,7 @@ namespace MagicApi.Data
         public DbSet<User> Users { get; private set; }
         public DbSet<Format> Formats { get; private set; }
         public DbSet<UserDeck> UserDecks { get; private set; }
-        public DbSet<Deck> Decks { get; private set; }
+        public DbSet<DeckCards> DeckCards { get; private set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -28,8 +28,8 @@ namespace MagicApi.Data
             modelBuilder.Entity<Format>().Property(c => c.Id).ValueGeneratedOnAdd();
             modelBuilder.Entity<UserDeck>().HasKey(c => c.Id);
             modelBuilder.Entity<UserDeck>().Property(c => c.Id).ValueGeneratedOnAdd();
-            modelBuilder.Entity<Deck>().HasKey(c => c.Id);
-            modelBuilder.Entity<Deck>().Property(c => c.Id).ValueGeneratedOnAdd();
+            modelBuilder.Entity<DeckCards>().HasKey(c => c.Id);
+            modelBuilder.Entity<DeckCards>().Property(c => c.Id).ValueGeneratedOnAdd();
         }
     }
 }

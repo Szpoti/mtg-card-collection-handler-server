@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MagicApi.Models
 {
-    public class Deck
+    public class DeckCards
     {
         public int Id { get; set; }
         [Required]
