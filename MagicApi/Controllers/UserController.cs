@@ -38,17 +38,35 @@ namespace MagicApi.Controllers
         [AllowAnonymous]
         [EnableCors("MainPolicy")]
         [HttpPost("register")]
-        public User Register([FromBody] User model)
+        public IActionResult Register([FromBody] User model)
         {
             try
             {
+                var user = _context.Users.Where(u => u.Email == model.Email).FirstOrDefault();
+                if (user == null)
+                {
+                    System.Console.WriteLine("No user with same email was found");
+                }
+                else
+                {
+                    return StatusCode(401, "Email already occupied!");
+                }
+                user = _context.Users.Where(u => u.Username == model.Username).FirstOrDefault();
+                if (user == null)
+                {
+                    System.Console.WriteLine("No user with same username was found");
+                }
+                else
+                {
+                    return StatusCode(401, "Username already occupied!");
+                }
                 // create user
                 model.Password = HashPassword(model.Password);
                 model.JWT = _authService.GenerateSecurityToken(model);
                 _context.Add(model);
                 _context.SaveChanges();
                 model.Password = null;
-                return model;
+                return Ok(model);
             }
             catch (Exception)
             {
@@ -59,7 +77,7 @@ namespace MagicApi.Controllers
         [AllowAnonymous]
         [EnableCors("MainPolicy")]
         [HttpPost("login")]
-        public User Login([FromBody] User model)
+        public IActionResult Login([FromBody] User model)
         {
             try
             {
@@ -69,15 +87,15 @@ namespace MagicApi.Controllers
                     user.JWT = _authService.GenerateSecurityToken(user);
                     _context.SaveChanges();
                     user.Password = string.Empty;
-                    return user;
+                    return Ok(user);
                 }
-                return null;
+                return StatusCode(401, "Invalid username or password");
             }
             catch (Exception ex)
             {
                 // return error message if there was an exception
                 System.Console.WriteLine(ex.Message);
-                return null;
+                return StatusCode(401, "Invalid username or password");
             }
         }
 
@@ -97,7 +115,7 @@ namespace MagicApi.Controllers
         [HttpPost("logout")]
         public IActionResult LogOut(string jwt)
         {
-            User user =_context.Users
+            User user = _context.Users
                 .Where(user => user.JWT == jwt)
                 .FirstOrDefault();
             if (user == null)
