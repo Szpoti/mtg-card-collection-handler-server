@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MagicApi.Migrations
 {
     [DbContext(typeof(MTGContext))]
-    [Migration("20210112125937_DeckBuildingMigration")]
-    partial class DeckBuildingMigration
+    [Migration("20210114093956_UpdatedDeckBuildingMigration")]
+    partial class UpdatedDeckBuildingMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,32 @@ namespace MagicApi.Migrations
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
                 .HasAnnotation("ProductVersion", "3.1.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            modelBuilder.Entity("MagicApi.Models.Deck", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<int>("FormatId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FormatId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Decks");
+                });
 
             modelBuilder.Entity("MagicApi.Models.DeckCards", b =>
                 {
@@ -89,29 +115,7 @@ namespace MagicApi.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("MagicApi.Models.UserDeck", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<int>("FormatId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FormatId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserDecks");
-                });
-
-            modelBuilder.Entity("MagicApi.Models.UserDeck", b =>
+            modelBuilder.Entity("MagicApi.Models.Deck", b =>
                 {
                     b.HasOne("MagicApi.Models.Format", "Format")
                         .WithMany()

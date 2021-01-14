@@ -3,7 +3,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace MagicApi.Migrations
 {
-    public partial class DeckBuildingMigration : Migration
+    public partial class UpdatedDeckBuildingMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -37,25 +37,26 @@ namespace MagicApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserDecks",
+                name: "Decks",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(nullable: false),
                     UserId = table.Column<int>(nullable: false),
                     FormatId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserDecks", x => x.Id);
+                    table.PrimaryKey("PK_Decks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserDecks_Formats_FormatId",
+                        name: "FK_Decks_Formats_FormatId",
                         column: x => x.FormatId,
                         principalTable: "Formats",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserDecks_Users_UserId",
+                        name: "FK_Decks_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -63,13 +64,13 @@ namespace MagicApi.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserDecks_FormatId",
-                table: "UserDecks",
+                name: "IX_Decks_FormatId",
+                table: "Decks",
                 column: "FormatId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserDecks_UserId",
-                table: "UserDecks",
+                name: "IX_Decks_UserId",
+                table: "Decks",
                 column: "UserId");
         }
 
@@ -79,7 +80,7 @@ namespace MagicApi.Migrations
                 name: "DeckCards");
 
             migrationBuilder.DropTable(
-                name: "UserDecks");
+                name: "Decks");
 
             migrationBuilder.DropTable(
                 name: "Formats");
