@@ -23,17 +23,7 @@ namespace MagicApi.Controllers
     public class DeckController : ControllerBase
     {
         private readonly MTGContext _context;
-
         private readonly IConfiguration _configuration;
-
-
-        public DeckController(MTGContext context, IConfiguration configuration)
-        {
-            _context = context;
-            _configuration = configuration;
-        }
-
-        [EnableCors("MainPolicy")]
-
     }
 }
+

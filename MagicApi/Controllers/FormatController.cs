@@ -36,15 +36,14 @@ namespace MagicApi.Controllers
         [AllowAnonymous]
         [EnableCors("MainPolicy")]
         [HttpPost("add")]
-        {
-            public IActionResult AddFormat([FromBody] Format format)
+        public IActionResult AddFormat([FromBody] Format format)
         {
             try
             {
                 var existingFormat = _context.Formats.Where(f => f.Name == format.Name).FirstOrDefault();
-                if (existingFormat != null)
+                if (existingFormat == null)
                 {
-                    if (format.Name != null && format.minCardNumber != null && format.maxCardNumber != null)
+                    if (format.Name != null && format.minCardNumber != null)
                     {
                         _context.Add(format);
                         _context.SaveChanges();
@@ -64,5 +63,4 @@ namespace MagicApi.Controllers
         }
     }
 
-}
 }
