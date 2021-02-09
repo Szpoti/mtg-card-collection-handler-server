@@ -32,5 +32,8 @@ namespace MagicApi.Controllers
             _context = context;
             _configuration = configuration;
         }
+
+        [EnableCors("MainPolicy")]
+
     }
 }
