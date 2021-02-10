@@ -129,5 +129,42 @@ namespace MagicApi.Controllers
             }
         }
 
+        [AllowAnonymous]
+        [EnableCors("MainPolicy")]
+        [HttpPost("removeFrom/{deckId}/{quantity}/{cardId}")]
+        public IActionResult RemoveCardFromDeck(int deckId, int quantity, string cardId)
+        {
+            try
+            {
+                var existingDeck = _context.Decks.Where(d => d.Id == deckId).FirstOrDefault();
+                if (existingDeck != null)
+                {
+                    var existingCard = _context.DeckCards.Where(c => c.CardId == cardId).FirstOrDefault();
+                    if (existingCard != null)
+                    {
+                        if (existingCard.Quantity - quantity <= 0)
+                        {
+                            _context.DeckCards.Remove(existingCard);
+                        }
+                        else
+                        {
+                            existingCard.Quantity -= quantity;
+                        }
+                    }
+                    else
+                    {
+                        return NotFound("CardId in given deck not found.");
+                    }
+                    _context.SaveChanges();
+                    return Ok("Card(s) succesfully removed from deck");
+                }
+                return NotFound("Deck with given Id not found.");
+            }
+            catch (System.Exception e)
+            {
+                return StatusCode(409, e);
+            }
+        }
+
     }
 }
