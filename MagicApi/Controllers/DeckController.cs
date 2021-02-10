@@ -40,7 +40,6 @@ namespace MagicApi.Controllers
         {
             try
             {
-                System.Console.WriteLine(deck.Name);
                 var existingDeck = _context.Decks.Where(d => d.Name == deck.Name).FirstOrDefault();
                 if (existingDeck == null)
                 {
@@ -54,6 +53,28 @@ namespace MagicApi.Controllers
             catch (System.Exception e)
             {
                 return StatusCode(400, e);
+            }
+        }
+
+        [AllowAnonymous]
+        [EnableCors("MainPolicy")]
+        [HttpPost("rename/{id}/{newName}")]
+        public IActionResult RenameDeck(int id, string newName)
+        {
+            try
+            {
+                var existingDeck = _context.Decks.Where(d => d.Id == id).FirstOrDefault();
+                if (existingDeck != null)
+                {
+                    existingDeck.Name = newName;
+                    _context.SaveChanges();
+                    return Ok("Deck was succesfully renamed!");
+                }
+                return NotFound("No deck with the given DeckId was found.");
+            }
+            catch (System.Exception e)
+            {
+                return StatusCode(409, e);
             }
         }
 
