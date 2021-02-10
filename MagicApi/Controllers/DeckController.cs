@@ -36,14 +36,15 @@ namespace MagicApi.Controllers
         [AllowAnonymous]
         [EnableCors("MainPolicy")]
         [HttpPost("create")]
-        public IActionResult CreateDeck(string deckName, int formatId, int userId)
+        public IActionResult CreateDeck([FromBody] Deck deck)
         {
             try
             {
-                var existingDeck = _context.Decks.Where(d => d.Name == deckName).FirstOrDefault();
+                System.Console.WriteLine(deck.Name);
+                var existingDeck = _context.Decks.Where(d => d.Name == deck.Name).FirstOrDefault();
                 if (existingDeck == null)
                 {
-                    Deck newDeck = new Deck() { FormatId = formatId, Name = deckName, UserId = userId };
+                    Deck newDeck = new Deck() { Name = deck.Name, UserId = deck.UserId, FormatId = deck.FormatId };
                     _context.Add(newDeck);
                     _context.SaveChanges();
                     return Ok("Deck succesfully created");
