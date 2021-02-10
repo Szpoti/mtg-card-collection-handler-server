@@ -78,5 +78,26 @@ namespace MagicApi.Controllers
             }
         }
 
+        [AllowAnonymous]
+        [EnableCors("MainPolicy")]
+        [HttpGet("decksOf/{id}")]
+        public IActionResult GetDecksOf(int id)
+        {
+            try
+            {
+                var existingUser = _context.Users.Where(u => u.Id == id).FirstOrDefault();
+                if (existingUser != null)
+                {
+                    List<Deck> decks = _context.Decks.Where(d => d.UserId == existingUser.Id).ToList();
+                    return Ok(decks);
+                }
+                return NotFound("No user with given Id was found");
+            }
+            catch (System.Exception e)
+            {
+                return StatusCode(409, e);
+            }
+        }
+
     }
 }
