@@ -8,9 +8,9 @@ namespace MagicApi.Models
         [Required]
         public string Name { get; set; }
         [Required]
-        public User User { get; set; }
+        public int UserId { get; set; }
         [Required]
-        public Format Format { get; set; }
+        public int FormatId { get; set; }
 
     }
 }
