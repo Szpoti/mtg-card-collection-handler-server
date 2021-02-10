@@ -99,5 +99,35 @@ namespace MagicApi.Controllers
             }
         }
 
+        [AllowAnonymous]
+        [EnableCors("MainPolicy")]
+        [HttpPost("addTo/{deckId}/{quantity}/{cardId}")]
+        public IActionResult AddCardToDeck(int deckId, int quantity, string cardId)
+        {
+            try
+            {
+                var existingDeck = _context.Decks.Where(d => d.Id == deckId).FirstOrDefault();
+                if (existingDeck != null)
+                {
+                    var existingCard = _context.DeckCards.Where(c => c.CardId == cardId).FirstOrDefault();
+                    if (existingCard != null)
+                    {
+                        existingCard.Quantity += quantity;
+                    }
+                    else
+                    {
+                        _context.DeckCards.Add(new DeckCard() { CardId = cardId, DeckId = deckId, Quantity = quantity });
+                    }
+                    _context.SaveChanges();
+                    return Ok("Card(s) succesfully added to deck");
+                }
+                return NotFound("Deck with given Id not found.");
+            }
+            catch (System.Exception e)
+            {
+                return StatusCode(409, e);
+            }
+        }
+
     }
 }
