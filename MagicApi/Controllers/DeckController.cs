@@ -102,21 +102,26 @@ namespace MagicApi.Controllers
         [AllowAnonymous]
         [EnableCors("MainPolicy")]
         [HttpPost("addTo/{deckId}/{quantity}/{cardId}")]
-        public IActionResult AddCardToDeck(int deckId, int quantity, string cardId)
+        public IActionResult AddCardToDeck(int deckId, int quantity, [FromBody] CardItem card)
         {
             try
             {
                 var existingDeck = _context.Decks.Where(d => d.Id == deckId).FirstOrDefault();
                 if (existingDeck != null)
                 {
-                    var existingCard = _context.DeckCards.Where(c => c.CardId == cardId).FirstOrDefault();
+                    var existingCard = _context.DeckCards.Where(c => c.CardId == card.Id.ToString()).FirstOrDefault();
                     if (existingCard != null)
                     {
                         existingCard.Quantity += quantity;
                     }
                     else
                     {
-                        _context.DeckCards.Add(new DeckCard() { CardId = cardId, DeckId = deckId, Quantity = quantity });
+                        _context.DeckCards.Add(new DeckCard() { CardId = card.Id.ToString(), DeckId = deckId, Quantity = quantity });
+                        var existingCardItem = _context.Cards.Where(c => c.Id.ToString() == existingCard.CardId);
+                        if (existingCardItem == null)
+                        {
+                            _context.Cards.Add(card);
+                        }
                     }
                     _context.SaveChanges();
                     return Ok("Card(s) succesfully added to deck");
@@ -132,14 +137,14 @@ namespace MagicApi.Controllers
         [AllowAnonymous]
         [EnableCors("MainPolicy")]
         [HttpPost("removeFrom/{deckId}/{quantity}/{cardId}")]
-        public IActionResult RemoveCardFromDeck(int deckId, int quantity, string cardId)
+        public IActionResult RemoveCardFromDeck(int deckId, int quantity, [FromBody] CardItem card)
         {
             try
             {
                 var existingDeck = _context.Decks.Where(d => d.Id == deckId).FirstOrDefault();
                 if (existingDeck != null)
                 {
-                    var existingCard = _context.DeckCards.Where(c => c.CardId == cardId).FirstOrDefault();
+                    var existingCard = _context.DeckCards.Where(c => c.CardId == card.Id.ToString()).FirstOrDefault();
                     if (existingCard != null)
                     {
                         if (existingCard.Quantity - quantity <= 0)
