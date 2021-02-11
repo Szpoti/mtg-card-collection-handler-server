@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Services.Models;
 
 public class CardItem
@@ -26,20 +28,22 @@ public class CardItem
         CardFaces = cardModel.card_faces != null ? new string[] { cardModel.card_faces[0].oracle_text, cardModel.card_faces[1].oracle_text } : null;
     }
 
-    public System.Guid Id { get; }
-    public System.Guid OracleId { get; }
+    [Key]
+    public System.Guid Id { get; set; }
+    public System.Guid OracleId { get; set; }
     public string Name { get; set; }
     public string Rarity { get; }
     public string Set { get; }
     public string SetName { get; }
     public string Type { get; }
-    public string Price { get; }
+    public string Price { get; set; }
     public string Text { get; }
-    public List<string> ColorIdentity { get; }
-    public string ImageUri { get; }
-    public bool IsAvailable { get; set; }
+    public List<string> ColorIdentity { get; set; }
+    public string ImageUri { get; set; }
+    public bool IsAvailable { get; }
     public string Secret { get; }
     public string Layout { get; set; }
+    [NotMapped]
     public Legalities Legalities { get; set; }
     public string[] CardFaces { get; set; }
     public string[] CardImages { get; set; }
