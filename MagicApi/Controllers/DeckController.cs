@@ -58,6 +58,28 @@ namespace MagicApi.Controllers
 
         [AllowAnonymous]
         [EnableCors("MainPolicy")]
+        [HttpPost("delete/{id}")]
+        public IActionResult DeleteDeck(int id)
+        {
+            try
+            {
+                var existingDeck = _context.Decks.Where(d => d.Id == id).FirstOrDefault();
+                if (existingDeck == null)
+                {
+                    _context.Decks.Remove(existingDeck);
+                    _context.SaveChanges();
+                    return Ok("Deck succesfully removed");
+                }
+                return StatusCode(409, "Deck with given Id was not found");
+            }
+            catch (System.Exception e)
+            {
+                return StatusCode(400, e);
+            }
+        }
+
+        [AllowAnonymous]
+        [EnableCors("MainPolicy")]
         [HttpPost("rename/{id}/{newName}")]
         public IActionResult RenameDeck(int id, string newName)
         {
